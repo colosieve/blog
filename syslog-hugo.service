@@ -1,0 +1,18 @@
+[Unit]
+Description=Syslog Hugo Server
+After=network.target
+
+[Service]
+Type=simple
+User=hugo
+Group=hugo
+WorkingDirectory=/home/hugo/sites/syslog
+ExecStart=/usr/local/bin/hugo server --noHTTPCache --disableFastRender --bind 0.0.0.0 --baseURL http://localhost:1313
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+
+[Install]
+WantedBy=multi-user.target

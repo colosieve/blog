@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div class="content-wrapper">
+    <article>
+        <h1>{{ .Title }}</h1>
+        <div class="post-meta">
+            <span>📅 <time>{{ .Date.Format "2006-01-02" }}</time></span>{{ with .Params.author }} <span class="author">👤 {{ . }}</span>{{ end }}
+        </div>
+        {{ .Content }}
+    </article>
+    <aside class="toc-container">
+        <nav class="toc" data-toc-depth="{{ .Params.toc_depth | default 2 }}">
+            <h3 class="toc-title">Table of Contents <span class="toc-depth-hint">depth={{ .Params.toc_depth | default 2 }}</span></h3>
+            <div class="toc-content"></div>
+        </nav>
+    </aside>
+</div>
+<a href="{{ .Site.BaseURL }}">← Back to home</a>
+{{ end }}

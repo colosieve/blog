@@ -1,0 +1,16 @@
+{{ define "main" }}
+<h2>Recent Posts</h2>
+<ul class="post-list">
+    {{ range first 20 .Site.RegularPages }}
+    <li>
+        <a href="{{ .Permalink }}">{{ .Title }}</a> · 
+        <span class="post-meta">
+            <time>{{ .Date.Format "2006-01-02" }}</time>{{ with .Params.author }} · {{ . }}{{ end }}
+        </span>
+    </li>
+    {{ end }}
+</ul>
+{{ if gt (len .Site.RegularPages) 20 }}
+<p><a href="{{ "/posts/" | relURL }}">View all posts →</a></p>
+{{ end }}
+{{ end }}

@@ -1,0 +1,11 @@
+baseURL = '/'
+languageCode = 'en-us'
+title = 'Systems Log'
+disableLiveReload = false
+
+[pagination]
+  pagerSize = 10
+
+[caches]
+  [caches.getresource]
+    maxAge = 0

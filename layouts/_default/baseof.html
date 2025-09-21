@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ "favicon.ico" | relURL }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ "favicon-16x16.png" | relURL }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32x32.png" | relURL }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ "favicon-48x48.png" | relURL }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ "apple-touch-icon.png" | relURL }}">
+    <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
+    <link rel="stylesheet" href="{{ "css/style.css" | relURL }}?v={{ now.Unix }}">
+    {{ if eq .Layout "slides" }}
+    <link rel="stylesheet" href="{{ "css/slides.css" | relURL }}?v={{ now.Unix }}">
+    {{ end }}
+    <script src="{{ "js/icons.js" | relURL }}?v={{ now.Unix }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize mermaid but don't auto-render
+            mermaid.initialize({ startOnLoad: false, theme: 'default' });
+            
+            // Manually render each mermaid diagram
+            const mermaidDivs = document.querySelectorAll('.mermaid');
+            for (let i = 0; i < mermaidDivs.length; i++) {
+                const div = mermaidDivs[i];
+                const content = div.textContent || div.innerText;
+                if (content && content.trim()) {
+                    // Store original for potential re-rendering
+                    div.setAttribute('data-mermaid-original', content);
+                    
+                    try {
+                        // Use mermaid.render to generate SVG
+                        const id = `mermaid-${Date.now()}-${i}`;
+                        const { svg } = await mermaid.render(id, content);
+                        
+                        // Replace content with rendered SVG
+                        div.innerHTML = svg;
+                        div.setAttribute('data-processed', 'true');
+                        console.log('Mermaid diagram rendered successfully');
+                    } catch (error) {
+                        console.error('Mermaid render error:', error);
+                        div.innerHTML = '<pre style="color: red;">Mermaid diagram error: ' + error.message + '</pre>';
+                    }
+                }
+            }
+            
+            // Generate table of contents
+            const tocContent = document.querySelector('.toc-content');
+            const tocNav = document.querySelector('.toc');
+            if (tocContent && tocNav) {
+                const maxDepth = parseInt(tocNav.dataset.tocDepth) || 2;
+                const minLevel = 2; // Start from h2
+                const maxLevel = minLevel + maxDepth - 1; // e.g., 2 + 2 - 1 = 3 (h2 and h3)
+                
+                // Build selector for the allowed heading levels
+                const selectors = [];
+                for (let i = minLevel; i <= Math.min(maxLevel, 6); i++) {
+                    selectors.push('article h' + i);
+                }
+                
+                const headings = document.querySelectorAll(selectors.join(', '));
+                if (headings.length > 0) {
+                    const tocList = document.createElement('ul');
+                    tocList.className = 'toc-list';
+                    
+                    headings.forEach(function(heading) {
+                        if (!heading.id) return;
+                        
+                        const level = parseInt(heading.tagName.charAt(1));
+                        const item = document.createElement('li');
+                        item.className = 'toc-item toc-level-' + level;
+                        
+                        const link = document.createElement('a');
+                        link.href = '#' + heading.id;
+                        link.textContent = heading.textContent;
+                        link.className = 'toc-link';
+                        
+                        item.appendChild(link);
+                        tocList.appendChild(item);
+                    });
+                    
+                    tocContent.appendChild(tocList);
+                    
+                    // Highlight active section on scroll
+                    const observerOptions = {
+                        rootMargin: '-20% 0px -70% 0px'
+                    };
+                    
+                    const observer = new IntersectionObserver(function(entries) {
+                        entries.forEach(function(entry) {
+                            const id = entry.target.getAttribute('id');
+                            const tocLink = document.querySelector('.toc-link[href="#' + id + '"]');
+                            if (tocLink) {
+                                if (entry.isIntersecting) {
+                                    // Remove all active classes
+                                    document.querySelectorAll('.toc-link').forEach(function(link) {
+                                        link.classList.remove('active');
+                                    });
+                                    tocLink.classList.add('active');
+                                }
+                            }
+                        });
+                    }, observerOptions);
+                    
+                    // Only observe headings that are in the TOC
+                    headings.forEach(function(heading) {
+                        if (heading.id) {
+                            observer.observe(heading);
+                        }
+                    });
+                }
+            }
+            
+            // Add anchor links to headings
+            document.querySelectorAll('h2, h3, h4, h5, h6').forEach(function(heading) {
+                // Skip if heading doesn't have an ID
+                if (!heading.id) return;
+                
+                // Create anchor link
+                const link = document.createElement('a');
+                link.className = 'heading-anchor';
+                link.href = '#' + heading.id;
+                link.innerHTML = window.icons.link;
+                link.setAttribute('aria-label', 'Link to this section');
+                
+                // Add link to heading
+                heading.appendChild(link);
+            });
+            
+            // Add copy buttons to code blocks
+            document.querySelectorAll('pre').forEach(function(pre) {
+                // Skip mermaid diagrams
+                if (pre.closest('.mermaid')) return;
+                
+                // Skip line number pre elements (they contain user-select:none spans)
+                const firstSpan = pre.querySelector('span');
+                if (firstSpan && firstSpan.style.userSelect === 'none') return;
+                
+                // Create copy button
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-button';
+                copyButton.innerHTML = window.icons.copy;
+                copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+                
+                // Create wrap toggle button
+                const wrapButton = document.createElement('button');
+                wrapButton.className = 'wrap-button';
+                wrapButton.innerHTML = window.icons.wrap;
+                wrapButton.setAttribute('aria-label', 'Toggle text wrapping');
+                
+                // Wrap pre in a container for positioning
+                const container = document.createElement('div');
+                container.className = 'code-container';
+                pre.parentNode.insertBefore(container, pre);
+                container.appendChild(pre);
+                container.appendChild(copyButton);
+                container.appendChild(wrapButton);
+                
+                // Wrap toggle functionality
+                wrapButton.addEventListener('click', function() {
+                    pre.classList.toggle('wrapped');
+                    wrapButton.classList.toggle('active');
+                });
+                
+                // Copy functionality
+                copyButton.addEventListener('click', async function() {
+                    const code = pre.querySelector('code') || pre;
+                    const text = code.textContent;
+                    
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        copyButton.innerHTML = window.icons.check;
+                        copyButton.classList.add('copied');
+                        setTimeout(() => {
+                            copyButton.innerHTML = window.icons.copy;
+                            copyButton.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        // Fallback for older browsers
+                        const textarea = document.createElement('textarea');
+                        textarea.value = text;
+                        textarea.style.position = 'absolute';
+                        textarea.style.left = '-9999px';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        try {
+                            document.execCommand('copy');
+                            copyButton.innerHTML = window.icons.check;
+                            copyButton.classList.add('copied');
+                            setTimeout(() => {
+                                copyButton.innerHTML = window.icons.copy;
+                                copyButton.classList.remove('copied');
+                            }, 2000);
+                        } catch (err) {
+                            copyButton.innerHTML = window.icons.error;
+                            setTimeout(() => {
+                                copyButton.innerHTML = window.icons.copy;
+                            }, 2000);
+                        }
+                        document.body.removeChild(textarea);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+        </nav>
+    </header>
+    <main>
+        {{ block "main" . }}{{ end }}
+    </main>
+    <footer>
+        <p>&copy; {{ now.Year }} {{ .Site.Title }}</p>
+    </footer>
+</body>
+</html>

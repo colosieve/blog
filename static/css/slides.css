@@ -1,0 +1,301 @@
+/* Slide presentation styles */
+.slides-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.slides {
+    position: relative;
+    width: 100%;
+}
+
+/* Individual slide styling */
+.slide {
+    display: none;
+    min-height: 100vh;
+    padding: 4rem;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    scroll-snap-align: start;
+}
+
+.slide.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Title slide special styling */
+.slide.title-slide {
+    text-align: center;
+}
+
+.slide.title-slide h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #d0d0d0;
+    padding-bottom: 1.2rem;
+}
+
+.slide.title-slide h2 {
+    font-size: 1.8rem;
+    color: #666;
+    font-weight: normal;
+    margin-bottom: 2rem;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.slide.title-slide .author {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* Slide content wrapper */
+.slide-content {
+    width: 100%;
+}
+
+/* Speaker notes */
+.slide-notes {
+    display: none;
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+}
+
+.notes-header {
+    font-weight: bold;
+    color: #856404;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.slide-notes p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+.slide-notes ul, .slide-notes ol {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Show notes in document view */
+.slides-container.doc-view .slide-notes {
+    display: block;
+}
+
+/* Regular slide content */
+.slide h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid #333;
+    padding-bottom: 1rem;
+}
+
+.slide:not(.title-slide) h2 {
+    font-size: 2.4rem;
+    margin: 2rem 0 2.5rem 0;
+    color: #444;
+    border-bottom: 2px solid #d0d0d0;
+    padding-bottom: 1.2rem;
+}
+
+.slide h3 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem 0;
+    color: #555;
+}
+
+/* When h3 immediately follows h2, style it as a subtitle */
+.slide:not(.title-slide) h2 + h3 {
+    font-size: 1.8rem;
+    color: #666;
+    font-weight: normal;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: none;
+    padding-bottom: 0;
+    text-align: right;
+}
+
+.slide p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.slide ul, .slide ol {
+    font-size: 1.2rem;
+    line-height: 2;
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.slide li {
+    margin-bottom: 0.5rem;
+}
+
+.slide code {
+    background: #f4f4f4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 1.1rem;
+}
+
+.slide pre {
+    background: #f4f4f4;
+    padding: 1.5rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.slide pre code {
+    background: none;
+    padding: 0;
+    font-size: 1rem;
+}
+
+/* Mermaid diagram styling in slides */
+.slide .mermaid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    margin: 2rem 0;
+}
+
+.slide .mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.slide blockquote {
+    border-left: 4px solid #0066cc;
+    padding-left: 2rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: #555;
+}
+
+/* Navigation controls */
+.slide-nav {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.slide-nav button {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.slide-nav button:hover:not(:disabled) {
+    background: #0052a3;
+}
+
+.slide-nav button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+#slide-counter {
+    font-size: 1rem;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Document view mode */
+.slides-container.doc-view .slides {
+    display: block;
+}
+
+.slides-container.doc-view .slide {
+    display: block !important;
+    min-height: auto;
+    padding: 3rem 4rem;
+    border-bottom: 2px solid #eee;
+}
+
+.slides-container.doc-view .slide:last-child {
+    border-bottom: none;
+}
+
+.slides-container.doc-view .slide-nav button:not(#toggle-view) {
+    display: none;
+}
+
+.slides-container.doc-view #slide-counter {
+    display: none;
+}
+
+/* Print styles */
+@media print {
+    .slide {
+        display: block !important;
+        page-break-after: always;
+        min-height: auto;
+        padding: 2rem;
+    }
+    
+    .slide-nav {
+        display: none;
+    }
+    
+    .slide h1 {
+        font-size: 2rem;
+    }
+    
+    .slide.title-slide h1 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .slide {
+        padding: 2rem;
+    }
+    
+    .slide h1 {
+        font-size: 2rem;
+    }
+    
+    .slide.title-slide h1 {
+        font-size: 2.5rem;
+    }
+    
+    .slide-nav {
+        bottom: 1rem;
+        right: 1rem;
+        padding: 0.75rem;
+    }
+    
+    .slide-nav button {
+        padding: 0.4rem 0.8rem;
+        font-size: 1rem;
+    }
+}

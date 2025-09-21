@@ -1,0 +1,151 @@
+{{ define "main" }}
+<div class="slides-container">
+    <article class="slides">
+        <section class="slide title-slide" id="slide-1">
+            <h1>{{ .Title }}</h1>
+            {{ with .Params.subtitle }}<h2>{{ . }}</h2>{{ end }}
+            {{ with .Params.author }}<p class="author">{{ . }}</p>{{ end }}
+            <time>{{ .Date.Format "January 2, 2006" }}</time>
+        </section>
+        
+        {{ $content := .RawContent }}
+        {{ $slides := split $content "\n---\n" }}
+        {{ range $index, $slide := $slides }}
+        {{ if ne (trim $slide " \n") "" }}
+        <section class="slide" id="slide-{{ add $index 2 }}">
+            {{ $parts := split $slide "\n::notes::\n" }}
+            <div class="slide-content">
+                {{ index $parts 0 | $.Page.RenderString }}
+            </div>
+            {{ if gt (len $parts) 1 }}
+            <div class="slide-notes">
+                <div class="notes-header">Notes:</div>
+                {{ index $parts 1 | $.Page.RenderString }}
+            </div>
+            {{ end }}
+        </section>
+        {{ end }}
+        {{ end }}
+    </article>
+    
+    <nav class="slide-nav">
+        <button id="prev-slide" aria-label="Previous slide">←</button>
+        <span id="slide-counter">1 / 1</span>
+        <button id="next-slide" aria-label="Next slide">→</button>
+        <button id="toggle-view" aria-label="Toggle view">⊞</button>
+    </nav>
+</div>
+
+<script>
+(function() {
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-slide');
+    const nextBtn = document.getElementById('next-slide');
+    const counter = document.getElementById('slide-counter');
+    const toggleBtn = document.getElementById('toggle-view');
+    const container = document.querySelector('.slides-container');
+    let currentSlide = 0;
+    let isDocView = false;
+
+    function updateSlide(n, skipHistory = false) {
+        if (isDocView) return;
+        slides.forEach(s => s.classList.remove('active'));
+        currentSlide = Math.max(0, Math.min(n, slides.length - 1));
+        slides[currentSlide].classList.add('active');
+        counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === slides.length - 1;
+        slides[currentSlide].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Update URL hash with the slide's ID
+        if (!skipHistory && slides[currentSlide].id) {
+            history.replaceState(null, null, `#${slides[currentSlide].id}`);
+        }
+        
+        // Re-render mermaid diagrams in the current slide if needed
+        if (typeof mermaid !== 'undefined') {
+            const currentMermaidDivs = slides[currentSlide].querySelectorAll('.mermaid');
+            
+            currentMermaidDivs.forEach(async (div, index) => {
+                const svg = div.querySelector('svg');
+                
+                // Check if SVG is an error or improperly sized
+                if (!svg || svg.querySelector('.error-icon') || 
+                    (svg.style.maxWidth && parseInt(svg.style.maxWidth) < 100)) {
+                    
+                    let originalDefinition = div.getAttribute('data-mermaid-original');
+                    if (!originalDefinition) {
+                        // Skip - mermaid definition not stored yet (happens on initial load)
+                        return;
+                    }
+                    
+                    // Unescape HTML entities
+                    const textarea = document.createElement('textarea');
+                    textarea.innerHTML = originalDefinition;
+                    originalDefinition = textarea.value;
+                    
+                    console.log('Re-rendering mermaid with content:', originalDefinition);
+                    
+                    try {
+                        // Use mermaid.render to generate SVG from content
+                        const id = `mermaid-slide-${currentSlide}-${index}`;
+                        const { svg: svgCode } = await mermaid.render(id, originalDefinition);
+                        
+                        // Replace the content with the new SVG
+                        div.innerHTML = svgCode;
+                        div.setAttribute('data-processed', 'true');
+                        console.log('Mermaid re-rendered successfully');
+                    } catch (error) {
+                        console.error('Mermaid render error:', error);
+                    }
+                }
+            });
+        }
+    }
+
+    function toggleView() {
+        isDocView = !isDocView;
+        container.classList.toggle('doc-view', isDocView);
+        if (!isDocView) {
+            updateSlide(currentSlide);
+        }
+        toggleBtn.textContent = isDocView ? '▦' : '⊞';
+    }
+
+    prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1));
+    nextBtn.addEventListener('click', () => updateSlide(currentSlide + 1));
+    toggleBtn.addEventListener('click', toggleView);
+
+    document.addEventListener('keydown', (e) => {
+        if (isDocView) return;
+        if (e.key === 'ArrowLeft') updateSlide(currentSlide - 1);
+        if (e.key === 'ArrowRight') updateSlide(currentSlide + 1);
+        if (e.key === 'd') toggleView();
+    });
+
+    // Handle direct navigation via URL hash
+    function handleHashChange() {
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            // Find slide by ID
+            const targetSlide = document.getElementById(hash);
+            if (targetSlide) {
+                const slideIndex = Array.from(slides).indexOf(targetSlide);
+                if (slideIndex !== -1) {
+                    updateSlide(slideIndex, true);
+                }
+            }
+        }
+    }
+    
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    
+    // Initialize with hash or default to first slide
+    handleHashChange();
+    if (currentSlide === 0 && !window.location.hash) {
+        updateSlide(0);
+    }
+})();
+</script>
+{{ end }}

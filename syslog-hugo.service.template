@@ -1,0 +1,15 @@
+[Unit]
+Description=Syslog Hugo Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=__WORKDIR__
+ExecStart=__HUGO_BIN__ server --noHTTPCache --disableFastRender --bind 0.0.0.0 --baseURL http://localhost:1313
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

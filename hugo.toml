@@ -1,6 +1,6 @@
 baseURL = '/'
 languageCode = 'en-us'
-title = 'Systems Log'
+title = "Colonel's Pensieve"
 disableLiveReload = false
 
 [pagination]

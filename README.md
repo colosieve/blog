@@ -1,4 +1,4 @@
-# Systems Log
+# Colonel's Pensieve
 
 Bare-minimum Hugo site with posts and custom slide presentation system.
 
@@ -11,11 +11,26 @@ A minimal Hugo static site generator setup with:
 
 ## Local Development
 
+Requires the extended Hugo binary (tested with v0.150.0).
+
 ```bash
 # Start development server with live reload
 hugo server
 
 # Visit http://localhost:1313
+```
+
+> Tip: When cloning this repo for a new site, update the `title` in `hugo.toml` to match your project's name.
+
+
+### Run as user service
+
+```bash
+# install and launch a systemd user service from the repo root
+./setup-dev-svc.sh
+
+# inspect logs
+journalctl --user -u syslog-hugo.service -f
 ```
 
 ### Cache Busting Implementation
@@ -50,4 +65,4 @@ hugo server --noHTTPCache --disableFastRender
 
 Site can be published via GitHub Pages at https://colosieve.github.io/blog/.
 
-Pushes to master can trigger a GitHub Actions workflow for automatic deployment.
+Pushes to the `blog` branch trigger a GitHub Actions workflow for automatic deployment.

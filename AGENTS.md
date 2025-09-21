@@ -5,13 +5,15 @@
 - `layouts/_default/` stores the base templates, partials, and slide layout logic; tweak shared markup here before touching individual pages.
 - `layouts/shortcodes/` contains helper shortcodes (slides, callouts); keep slide decks co-located with their Markdown in `content/posts/`.
 - `static/css/` and `static/js/` expose assets served as-is; update favicons and manifest entries under `static/`.
-- `syslog-hugo.service` documents the systemd unit used for deployments—mirror changes there when automation scripts evolve.
+- `syslog-hugo.service.template` pairs with `setup-dev-svc.sh` to generate the user-level systemd unit; tweak both together when runtime flags change.
+- `.github/workflows/deploy.yml` runs the Pages deployment; keep it aligned with local build expectations and Hugo versions noted in `README.md`.
 
 ## Build, Test, and Development Commands
 - `hugo server --noHTTPCache --disableFastRender` launches a hot-reload dev server with cache busting—use it for authoring and slide checks.
 - `hugo` builds the production-ready site in `public/`; clean that directory before committing artifacts.
 - `hugo --panicOnWarning --printUnusedTemplates` fails fast on template issues and highlights stale layouts.
 - `hugo server --buildDrafts --buildFuture` previews draft or scheduled content prior to publication.
+- `./setup-dev-svc.sh` installs the user service for persistent local previews; rerun after editing the template or moving directories.
 
 ## Coding Style & Naming Conventions
 - Markdown: 80-character soft wrap, Title Case top-level headings, and fenced code blocks with a language hint (` ```bash `).

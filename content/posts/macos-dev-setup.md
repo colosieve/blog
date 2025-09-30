@@ -156,6 +156,21 @@ A **terminal** (or terminal emulator) is a text-based interface to the operating
 
 ---
 
+## Starship Prompt
+
+Installed **Starship**—a minimal, fast, and customizable prompt for any shell:
+- Shows git branch and status
+- Displays language versions (Node, Python, Rust, etc.)
+- Indicates command execution time
+- Nerd Font icon support
+
+```bash
+brew install starship
+echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+```
+
+---
+
 ## Unix/BSD/Linux and MacOS
 
 **Unix** (1969): Original operating system from Bell Labs—introduced hierarchical filesystem, pipes, and shell scripting.

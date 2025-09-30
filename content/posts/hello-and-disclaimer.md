@@ -1,11 +1,13 @@
 +++
 title = "Hello and Disclaimer"
 date = 2025-08-31T14:00:00Z
-author = "sysadmin"
+author = "colosieve"
 toc_depth = 3
 +++
 
 This site hosts systems journal logs and technical documentation.
+
+**Colonel's Pensieve** comes from the Chinese WeChat account 团长的冥想盆 (tuán zhǎng de míng xiǎng pén)—a memory repository for technical notes.
 
 Please note: content may contain inaccuracies—open an issue or pull request at [github.com/colosieve/blog](https://github.com/colosieve/blog) if something needs correction.
 

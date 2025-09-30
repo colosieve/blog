@@ -17,7 +17,7 @@
 
 ## Coding Style & Naming Conventions
 - Markdown: 80-character soft wrap, Title Case top-level headings, and fenced code blocks with a language hint (` ```bash `).
-- Front matter keys stay lowercase snake_case, dates use ISO-8601, and tags remain dash-case for URLs.
+- Front matter keys stay lowercase snake_case, dates use ISO-8601, tags remain dash-case for URLs, and author should be "colosieve".
 - HTML templates use 4-space indentation and Hugo pipes (`| relURL`, `| safeHTML`) for transformations.
 - CSS/JS in `static/` stay vanilla, camelCase functions in `static/js/icons.js`, kebab-case class names in stylesheets, and no build steps.
 - Slides follow `Slide N – Topic` heading names so anchors render predictably; keep each slide as an H2.

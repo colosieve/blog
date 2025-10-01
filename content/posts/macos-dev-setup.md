@@ -253,3 +253,4 @@ In practice: macOS gives you a Unix foundation with commercial polish—familiar
 Coming up in future sessions:
 - Crash course on shell
 - Crash course on git
+- Crash course on web developing

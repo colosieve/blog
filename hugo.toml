@@ -3,6 +3,11 @@ languageCode = 'en-us'
 title = "Colonel's Pensieve"
 disableLiveReload = false
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
 [pagination]
   pagerSize = 10
 

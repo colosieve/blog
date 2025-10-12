@@ -35,6 +35,20 @@ Set up **Node.js** using Homebrew with **nvm** (Node Version Manager):
 
 ```bash
 brew install nvm
+```
+
+Add the following to your shell profile e.g. ~/.profile or ~/.zshrc:
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+```
+
+Then source it and install Node:
+
+```bash
+source ~/.zshrc
 nvm install --lts
 nvm use --lts
 ```
@@ -121,15 +135,23 @@ Installed **[Claude Code](https://github.com/anthropics/claude-code)**—Anthrop
 - Automated refactoring
 - Works directly from the terminal
 
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
 ---
 
 ## OpenCode.ai
 
-Set up **OpenCode.ai**—an open-source alternative to commercial AI coding tools:
+Set up **[OpenCode.ai](https://opencode.ai)**—an open-source alternative to commercial AI coding tools:
 - Code generation and refactoring
 - Intelligent suggestions
 - Code explanations
 - Still needs some love and development
+
+```bash
+npm i -g opencode-ai
+```
 
 ---
 

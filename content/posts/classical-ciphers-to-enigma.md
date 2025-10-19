@@ -35,7 +35,7 @@ Throughout history, people needed to hide messages:
 </div>
 <div style="flex: 0 0 auto;">
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Letter_of_a_steward_-_3rd_century_B.C..JPG/300px-Letter_of_a_steward_-_3rd_century_B.C..JPG" alt="Ancient Greek papyrus letter" style="max-width: 400px;">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Letter_of_a_steward_-_3rd_century_B.C..JPG/300px-Letter_of_a_steward_-_3rd_century_B.C..JPG" alt="Ancient Greek papyrus letter" style="max-width: 400px;">
 
 </div>
 </div>

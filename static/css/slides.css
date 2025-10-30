@@ -186,6 +186,45 @@
     color: #555;
 }
 
+/* Details/Summary (for quiz hints) */
+.slide details {
+    margin: 0.25rem 0;
+    padding: 0.5rem 0.75rem;
+    background: #f8f9fa;
+    border-left: 3px solid #0066cc;
+    border-radius: 4px;
+}
+
+.slide summary {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #0066cc;
+    cursor: pointer;
+    padding: 0.25rem;
+    user-select: none;
+}
+
+.slide summary:hover {
+    color: #0052a3;
+    background: #e9ecef;
+    border-radius: 3px;
+}
+
+.slide details[open] summary {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.slide details p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+.slide details strong {
+    color: #0066cc;
+}
+
 /* Navigation controls */
 .slide-nav {
     position: fixed;

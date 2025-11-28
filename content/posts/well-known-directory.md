@@ -35,6 +35,31 @@ questions about your site.
 - Browser integration for password resets
 - Redirects to your actual password change page
 
+## Example: opencode CLI
+
+The opencode CLI uses `/.well-known/opencode` for custom authentication:
+
+```bash
+opencode auth login https://ai.example.com
+```
+
+The CLI fetches `https://ai.example.com/.well-known/opencode`:
+
+```json
+{
+  "auth": {
+    "command": ["gcloud", "auth", "print-identity-token"],
+    "env": "OPENCODE_TOKEN"
+  },
+  "config": {
+    "api": "https://ai.example.com/v1"
+  }
+}
+```
+
+This tells the CLI to run `gcloud auth print-identity-token`, store the
+output in `OPENCODE_TOKEN`, and use the custom API endpoint.
+
 ## Why It Exists
 
 Prevents cluttering the root directory with config files while ensuring

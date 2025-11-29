@@ -9,3 +9,10 @@ disableLiveReload = false
 [caches]
   [caches.getresource]
     maxAge = 0
+
+[params]
+  # Site banner image (path relative to static/, e.g., "images/banner.jpg")
+  # Leave empty or remove to disable banner
+  bannerImage = ""
+  bannerAlt = ""
+  bannerHeight = "200px"

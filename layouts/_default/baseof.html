@@ -212,6 +212,11 @@
     </script>
 </head>
 <body>
+    {{ with .Site.Params.bannerImage }}
+    <div class="site-banner" style="--banner-height: {{ $.Site.Params.bannerHeight | default "200px" }}">
+        <img src="{{ . | relURL }}" alt="{{ $.Site.Params.bannerAlt | default $.Site.Title }}">
+    </div>
+    {{ end }}
     <header>
         <nav>
             <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>

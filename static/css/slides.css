@@ -59,6 +59,38 @@
     width: 100%;
 }
 
+/* Two-column layout for slides */
+.slide-columns {
+    display: flex;
+    gap: 2rem;
+    align-items: start;
+}
+
+.slide-col-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.slide-col-aside {
+    flex: 0 0 auto;
+}
+
+/* Responsive: stack columns on narrow screens */
+@media (max-width: 768px) {
+    .slide-columns {
+        flex-direction: column;
+    }
+
+    .slide-col-aside {
+        width: 100%;
+    }
+
+    .slide-col-aside img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
 /* Speaker notes */
 .slide-notes {
     display: none;

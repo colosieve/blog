@@ -18,6 +18,6 @@ disableLiveReload = false
 [params]
   # Site banner image (path relative to static/, e.g., "images/banner.jpg")
   # Leave empty or remove to disable banner
-  bannerImage = ""
-  bannerAlt = ""
-  bannerHeight = "200px"
+  bannerImage = "images/banner.jpg"
+  bannerAlt = "Site banner"
+  bannerHeight = "205px"

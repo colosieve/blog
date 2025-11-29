@@ -42,8 +42,8 @@ After Rutherford discovered the nucleus (1911), scientists wanted to study it:
 
 ## Rutherford's Prediction (1920)
 
-<div style="display: flex; gap: 2rem; align-items: start;">
-<div style="flex: 1;">
+<div class="slide-columns">
+<div class="slide-col-main">
 
 Ernest Rutherford[^2] proposed a solution:
 
@@ -60,7 +60,7 @@ Ernest Rutherford[^2] proposed a solution:
 **The problem:** No one had found it yet
 
 </div>
-<div style="flex: 0 0 auto;">
+<div class="slide-col-aside">
 
 ![Ernest Rutherford](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Sir_Ernest_Rutherford_LCCN2014716719_-_restoration1.jpg/250px-Sir_Ernest_Rutherford_LCCN2014716719_-_restoration1.jpg)
 

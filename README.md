@@ -9,6 +9,42 @@ A minimal Hugo static site generator setup with:
 - Custom CSS-based slide presentations
 - No external dependencies or themes
 
+## Site Features
+
+### Banner Image
+
+Configurable site banner in `hugo.toml`:
+
+```toml
+[params]
+  bannerImage = "images/banner.jpg"  # path relative to static/
+  bannerAlt = "Site banner"
+  bannerHeight = "200px"
+```
+
+Features gradient fade (25-75% visible) and centered title overlay.
+
+### Slide Columns
+
+Two-column layout for slides with text + image:
+
+```html
+<div class="slide-columns">
+<div class="slide-col-main">
+
+Your content here...
+
+</div>
+<div class="slide-col-aside">
+
+![Image](url)
+
+</div>
+</div>
+```
+
+Stacks vertically on mobile.
+
 ## Local Development
 
 Requires the extended Hugo binary (tested with v0.150.0).

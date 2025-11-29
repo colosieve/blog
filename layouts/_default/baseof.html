@@ -215,11 +215,12 @@
     {{ with .Site.Params.bannerImage }}
     <div class="site-banner" style="--banner-height: {{ $.Site.Params.bannerHeight | default "200px" }}">
         <img src="{{ . | relURL }}" alt="{{ $.Site.Params.bannerAlt | default $.Site.Title }}">
+        <a href="{{ $.Site.BaseURL }}" class="site-banner-title">{{ $.Site.Title }}</a>
     </div>
     {{ end }}
-    <header>
+    <header{{ if $.Site.Params.bannerImage }} class="has-banner"{{ end }}>
         <nav>
-            <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+            {{ if not $.Site.Params.bannerImage }}<a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>{{ end }}
         </nav>
     </header>
     <main>

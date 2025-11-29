@@ -12,7 +12,7 @@ body {
 
 /* Site banner */
 .site-banner {
-    width: 100%;
+    position: relative;
     margin: -2rem -2rem 2rem -2rem;
     padding: 0;
     width: calc(100% + 4rem);
@@ -24,6 +24,36 @@ body {
     height: var(--banner-height, 200px);
     object-fit: cover;
     display: block;
+    mask-image:
+        linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%),
+        linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image:
+        linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%),
+        linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+}
+
+.site-banner-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2e3138;
+    text-decoration: none;
+}
+
+.site-banner-title:hover {
+    color: #0b0d0b;
+    text-decoration: none;
+}
+
+header.has-banner {
+    border-bottom: none;
+    margin-bottom: 1rem;
+    padding-bottom: 0;
 }
 
 header {

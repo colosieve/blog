@@ -20,18 +20,18 @@ ROWS = 34
 
 # Protocol constants
 FWK_MAGIC = bytes([0x32, 0xAC])
-CMD_STAGE_GREY_COL = 0x07
-CMD_DRAW_GREY_COL_BUFFER = 0x08
 CMD_BRIGHTNESS = 0x00
+CMD_DRAW_BW = 0x06  # Single command for all 306 LEDs as bits
 
 # Default serial devices for left and right LED matrices
 DEFAULT_DEVICES = ["/dev/ttyACM0", "/dev/ttyACM1"]
 
 
 class LEDMatrix:
-    def __init__(self, device: str, brightness: int = 200):
+    def __init__(self, device: str, brightness: int = 200, threshold: int = 64):
         self.device = device
         self.brightness = brightness
+        self.threshold = threshold  # Brightness threshold for on/off
         self.serial = None
 
     def connect(self):
@@ -50,31 +50,26 @@ class LEDMatrix:
     def send_command(self, cmd: bytes):
         if self.serial:
             self.serial.write(FWK_MAGIC + cmd)
-            self.serial.flush()
 
     def set_brightness(self, level: int):
         """Set global brightness (0-255)"""
         self.send_command(bytes([CMD_BRIGHTNESS, level]))
 
-    def stage_column(self, col: int, values: List[int]):
-        """Stage a single column of brightness values"""
-        cmd = bytes([CMD_STAGE_GREY_COL, col] + values[:ROWS])
-        self.send_command(cmd)
-
-    def draw(self):
-        """Commit staged columns to display"""
-        self.send_command(bytes([CMD_DRAW_GREY_COL_BUFFER, 0x00]))
-
     def render_frame(self, frame: List[List[int]]):
-        """Render a full frame (9 cols x 34 rows)"""
-        for col in range(COLS):
-            self.stage_column(col, frame[col])
-        self.draw()
+        """Render a full frame using DrawBW - single command for all 306 LEDs"""
+        # Pack 306 LEDs into 39 bytes (306 bits)
+        # Bit layout: LED[x,y] = bit (x + 9*y)
+        vals = [0] * 39
+        for x in range(COLS):
+            for y in range(ROWS):
+                if frame[x][y] > self.threshold:
+                    i = x + COLS * y
+                    vals[i // 8] |= 1 << (i % 8)
+        self.send_command(bytes([CMD_DRAW_BW] + vals))
 
     def clear(self):
         """Clear the display"""
-        frame = [[0] * ROWS for _ in range(COLS)]
-        self.render_frame(frame)
+        self.send_command(bytes([CMD_DRAW_BW] + [0] * 39))
 
 
 class MatrixRain:
@@ -151,8 +146,8 @@ def main():
     parser.add_argument("--devices", nargs="+", default=DEFAULT_DEVICES, help="Serial devices")
     args = parser.parse_args()
 
-    # Calculate clear interval in frames (assuming ~6 FPS actual)
-    clear_every_n_frames = int(args.clear_interval * 6) if args.clear_interval > 0 else 0
+    # Calculate clear interval in frames (DrawBW mode ~30+ FPS)
+    clear_every_n_frames = int(args.clear_interval * 30) if args.clear_interval > 0 else 0
 
     # Connect to LED matrices
     matrices = []

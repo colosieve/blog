@@ -20,6 +20,7 @@ The Framework 16 supports LED Matrix spacer modules that can be programmed via U
 Magic header: [0x32, 0xAC]
 Commands:
   0x00 - Set brightness
+  0x06 - Draw binary frame (39 bytes, all 306 LEDs as bits)
   0x07 - Stage greyscale column (col_index + 34 brightness values)
   0x08 - Commit staged buffer to display
 Baud rate: 115200
@@ -134,6 +135,45 @@ Row:  Brightness:
 
 - Speed: 0.02 seconds between frames = 50 FPS
 - Drop speed: 0.5 to 2.0 rows per frame (randomized per drop)
+
+## Performance Optimization: DrawBW Mode
+
+### Before (Greyscale mode - CMD 0x07/0x08)
+
+- 10 serial writes per frame: 9 StageGreyCol (0x07) + 1 FlushCols (0x08)
+- Each write requires USB round-trip latency (~5ms)
+- Result: ~6 FPS
+
+### After (Binary mode - CMD 0x06)
+
+- 1 serial write per frame: single DrawBW (0x06) command
+- All 306 LEDs packed as bits into 39 bytes
+- Result: ~30+ FPS
+
+### Code Change
+
+```python
+# Old: 10 writes per frame
+for col in range(9):
+    send(0x07, col, values[col])  # Stage column
+send(0x08, 0x00)                  # Commit
+
+# New: 1 write per frame
+vals = [0] * 39
+for x in range(9):
+    for y in range(34):
+        if frame[x][y] > threshold:
+            i = x + 9 * y
+            vals[i // 8] |= 1 << (i % 8)
+send(0x06, vals)  # Single command
+```
+
+### Trade-off
+
+- Lost: Variable brightness (greyscale)
+- Gained: ~5x frame rate improvement
+- No `flush()` needed with single-command writes
+- For matrix rain effect, binary on/off still looks good
 
 ## Linux Setup
 

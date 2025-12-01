@@ -12,6 +12,7 @@ import serial
 import time
 import random
 import argparse
+from pathlib import Path
 from typing import List
 
 # LED Matrix dimensions
@@ -25,6 +26,19 @@ CMD_DRAW_BW = 0x06  # Single command for all 306 LEDs as bits
 
 # Default serial devices for left and right LED matrices
 DEFAULT_DEVICES = ["/dev/ttyACM0", "/dev/ttyACM1"]
+
+# Screen backlight path
+BACKLIGHT_PATH = Path("/sys/class/backlight/amdgpu_bl1")
+
+
+def get_screen_brightness_pct() -> int:
+    """Read screen brightness percentage (0-100)"""
+    try:
+        current = int((BACKLIGHT_PATH / "brightness").read_text().strip())
+        max_val = int((BACKLIGHT_PATH / "max_brightness").read_text().strip())
+        return int(current * 100 / max_val) if max_val > 0 else 100
+    except:
+        return 100  # Default to full brightness on error
 
 
 class LEDMatrix:
@@ -164,10 +178,13 @@ def main():
     rains = [MatrixRain(args.brightness) for _ in matrices]
 
     frame_count = 0
+    last_led_brightness = -1
+    last_brightness_check = 0
 
     try:
         while True:
             frame_count += 1
+            now = time.monotonic()
 
             # Clear and reset periodically
             if clear_every_n_frames > 0 and frame_count >= clear_every_n_frames:
@@ -175,6 +192,16 @@ def main():
                 for matrix, rain in zip(matrices, rains):
                     rain.reset()
                     matrix.clear()
+
+            # Sync LED brightness with screen brightness (every 2 seconds)
+            if now - last_brightness_check >= 2.0:
+                last_brightness_check = now
+                screen_pct = get_screen_brightness_pct()
+                led_brightness = max(1, int(args.brightness * screen_pct / 100))
+                if led_brightness != last_led_brightness:
+                    for matrix in matrices:
+                        matrix.set_brightness(led_brightness)
+                    last_led_brightness = led_brightness
 
             # Render each matrix
             for matrix, rain in zip(matrices, rains):

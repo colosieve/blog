@@ -130,7 +130,7 @@ sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```
 
-Log out and back in for group changes to take effect.
+**Important:** You must log out and back in for group changes to take effect. xremap will not work until you do this.
 
 ### Create Config Directory
 
@@ -152,7 +152,7 @@ git clone https://github.com/xremap/xremap-gnome.git xremap@k0kubun.com
 gnome-extensions enable xremap@k0kubun.com
 ```
 
-You may need to restart GNOME Shell (log out/in or Alt+F2, type `r`, Enter on X11).
+**Important:** After installing the extension, you must restart GNOME Shell or log out/in for it to be recognized. Without this, xremap cannot detect which app is focused.
 
 ## Configure xremap
 
@@ -191,13 +191,15 @@ Description=xremap key remapper
 After=graphical-session.target
 
 [Service]
-ExecStart=%h/.cargo/bin/xremap %h/.config/xremap/config.yml
+ExecStart=%h/.cargo/bin/xremap --device "keyd virtual keyboard" %h/.config/xremap/config.yml
 Restart=always
 RestartSec=3
 
 [Install]
 WantedBy=default.target
 ```
+
+**Important:** The `--device "keyd virtual keyboard"` flag is critical. Without it, xremap won't see any devices because keyd intercepts the physical keyboard.
 
 Enable and start:
 
@@ -286,6 +288,18 @@ gsettings get org.gnome.mutter overlay-key
 **input-remapper**: GUI tool that works but lacks app-specific remapping. keyd + xremap is more flexible.
 
 **GNOME Tweaks**: Can swap Alt/Super globally but doesn't help with the Super+C → Ctrl+C translation.
+
+## Setup Order & Critical Notes
+
+The order matters because of how these tools interact:
+
+1. **Install and start keyd first** - Creates a virtual keyboard that intercepts physical input
+2. **Add yourself to input group and log out/in** - Required for xremap permissions
+3. **Install GNOME extension and restart shell** - Required for app detection
+4. **Configure xremap to use keyd's virtual keyboard** - Must use `--device "keyd virtual keyboard"`
+5. **Start xremap** - Now it can see keyd's virtual keyboard and do app-specific remapping
+
+Without these steps in order, xremap won't see any input devices or won't know which app is focused.
 
 ## Summary
 

@@ -1,3 +1,15 @@
 public/
 .hugo_build.lock
 themes/ananke
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/

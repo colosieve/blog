@@ -5,7 +5,10 @@ author = "colosieve"
 tags = ["macos", "agents", "setup"]
 +++
 
-Short setup notes for turning a fresh Mac Mini into a personal agent machine.
+Short setup notes for turning a fresh Mac Mini into a personal agent machine:
+reset macOS, install the development basics, set up Codex, create a private
+knowledge repo, connect a Telegram bot, and let OpenClaw send daily task
+reminders.
 
 ## Reset macOS
 

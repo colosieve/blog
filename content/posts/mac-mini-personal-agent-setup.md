@@ -86,26 +86,39 @@ Authenticate GitHub CLI:
 gh auth login
 ```
 
-## Agent Tools
+## Codex and Optional Agent Tools
 
-Install Claude Code, OpenCode, and Codex:
+This setup focuses on Codex because OpenClaw needs it. Claude Code and OpenCode
+are optional extra agent CLIs.
+
+Install Codex:
 
 ```bash
-npm install -g @anthropic-ai/claude-code
-npm install -g opencode-ai
-brew install --cask codex
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
 ```
 
-Authenticate each tool:
+Optional:
 
 ```bash
-claude
-opencode
+curl -fsSL https://claude.ai/install.sh | bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+Authenticate Codex:
+
+```bash
 codex
 ```
 
 For Codex, choose `Sign in with ChatGPT` unless the machine is intended for
 API-key-based automation.
+
+If you installed the optional tools, authenticate those too:
+
+```bash
+claude
+opencode
+```
 
 ## Private Knowledge Repository
 

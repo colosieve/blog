@@ -8,6 +8,20 @@ disableLiveReload = false
     [markup.goldmark.renderer]
       unsafe = true
 
+[mediaTypes]
+  [mediaTypes."text/markdown"]
+    suffixes = ["md"]
+
+[outputFormats]
+  [outputFormats.RawMarkdown]
+    mediaType = "text/markdown"
+    baseName = "index"
+    isPlainText = true
+    notAlternative = true
+
+[outputs]
+  page = ["HTML", "RawMarkdown"]
+
 [pagination]
   pagerSize = 10
 

@@ -253,6 +253,10 @@ openclaw cron create "0 8 * * *" \
   --to "<YOUR_TELEGRAM_USER_ID>"
 ```
 
+If you do not know your Telegram user ID, ask the bot directly. It can walk
+through sending a message to the bot and reading the Telegram chat ID from the
+bot updates.
+
 Check it:
 
 ```bash
